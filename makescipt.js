@@ -53,11 +53,12 @@ getweather();
 
  const fetchedApiData = [
 
-    { date: '2026-06-05', day: 'Friday', weather: 'rainfall', status: 'heavy rain', degrees:'21°C' },
-    { date: '2026-06-06', day: 'Saturday', weather: 'sunshine', status: 'sunny', degrees:'30°C' },
-    { date: '2026-06-07', day: 'Sunday', weather: 'snow', status: 'snowing', degrees: '-10°C' },
-    { date: '2026-06-08', day: 'Monday', weather: 'wind', status: 'thunder',degrees: '0°C' },
-    { date: '2026-06-09', day: 'Tuesday', weather: 'clody', status: 'lightning', degrees: '15°C' }
+    { date: '2026-06-05', day: 'Friday', weather: 'rainfall', status: 'heavy rain', degrees:'21°C|°F' },
+    { date: '2026-06-06', day: 'Saturday', weather: 'sunshine', status: 'sunny', degrees:'30°C|°F' },
+    { date: '2026-06-07', day: 'Sunday', weather: 'snow', status: 'snowing', degrees: '-10°C|°F' },
+    { date: '2026-06-08', day: 'Monday', weather: 'wind', status: 'thunder',degrees: '0°C|°F' },
+    { date: '2026-06-09', day: 'Tuesday', weather: 'cloudy', status: 'lightning', degrees: '15°C|°F' },
+    { date: '2026-06-10', day: 'Wednesday', weather: 'sushine', status: 'bright', degrees: '24°C|°F' }
 
 ] 
 
@@ -143,7 +144,19 @@ getweather();
  console.log(getDateRangeApiData(fetchedApiData)); 
 
 
- 
+ function celciusFromFahr (fahrenheit) {
+
+        /* (number)  -> number
+           celciusFromFahr (32) returns 0 celc  ; celciusFromFah (212) returns 100 celc
+
+           change formula if celcius to Fahr (celcius * 9/5) + 32;
+       */
+    const answer = (fahrenheit - 32) * (5/9);
+      //console.log(answer);
+    return answer;
+
+ }
+ console.log(celciusFromFahr(32));
 
 
 

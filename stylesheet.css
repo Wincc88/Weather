@@ -10,21 +10,70 @@
 
 .container {
     margin-top: 10px; 
-  /*  border: 1px solid rebeccapurple; */
+   /* border: 1px solid rebeccapurple; 
+    width: fit-content; */
+    
 }
 
-.current_dayweather  {
-    margin-top: 20px;
+.grid-container  {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 
+      "a a"
+      "l r";
     border: 1px solid black;
+    margin-top: 10px;
     padding: 10px;
-    border-radius: 8px;
-    background-color: none;
-    width: fit-content; /* Adjust width based on content */
+    gap: 10px;
 }
 
-.searchBox {
-  margin-top: 10px;
-  height: 20px;
+.todaysweather  {
+  grid-area: a;
+  color: rebeccapurple;
+  text-align: center;
+}
+
+.todaysweather > h3 {
+  text-align: center;
+  margin: 0;
+}
+
+.leftGrid {
+  display: flex;
+  gap: 5px;
+  grid-area: l;
+  align-items: center;
+}
+
+.rightGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  grid-area: r;
+  align-items: flex-end;
+}
+
+.temperature, .temp_icons {
+  border: 1px solid green;
   width: fit-content;
-  border: 1px solid black;
+}
+
+.time_day, .status {
+  flex-direction: column;
+ /* text-align: right; */
+  border: 1px solid yellow;
+  width: fit-content;     /* text-align only moves to right when width !== fit-content */
+  justify-self: end;      /* justify-self instead */
+} 
+
+#searchBox {
+  margin-top: 10px;
+  height: 30px;
+  width: fit-content;
+  border: 1px solid red;
+}
+
+#cname {
+  text-align: center;
 }
