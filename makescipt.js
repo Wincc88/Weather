@@ -10,38 +10,21 @@ async function getweather () {
                 
         const weatherData = await response.json();
         
-        console.log(weatherData);
+        console.log(weatherData);  
+
+
+        // get data for specific city 
+            
+        // const allWeather = weatherData.weather; 
+        //const keysWeather = Object.keys(allWeather); 
+        //const weatherValue = Object.values(allWeather); 
+        // console.log(allweather.city);
                 
 
 
-       
-            
-        toCurrency.addEventListener('change', function() {
-            const selectedCurrency = toCurrency.options[toCurrency.selectedIndex].value;
-            if (allRates[selectedCurrency]) {
-                console.log(`USD to ${selectedCurrency}: ${allRates[selectedCurrency]}`);
-                middleResultDisplay.textContent = allRates[selectedCurrency];
-
-            } else {
-                console.log(`No rate for ${selectedCurrency} in response`);
-                middleResultDisplay.textContent = `No rate for ${selectedCurrency} available  ..yet!`;
-            }
-            console.log(`Selected currency on change: ${selectedCurrency}`);
-        });
-                        
-                // Set EUR rate on load -- it awaits and takes the result from fetch to select EUR  
-                        // another api use eur as base, so need to switch 
-                    
-                // i dont need special windows onload or DOMContentLoaded event listeners..
-                //.. because the script is at the end of the body, so it will run after the DOM is loaded.
-        middleResultDisplay.textContent = weatherData.rates.EUR;    //`${weatherData.conversion_rates.EUR}`;
-        console.log(`selected on load EUR = ${weatherData.rates.EUR}`)          //(`Selected currency on load: EUR = ${weatherData.conversion_rates.EUR}`); // Log the default selected currency on load
-        // ratesDisplays.textContent = weatherData.rates.EUR
-
-
     } catch (error) {
-        console.error('Error fetching rates:', error);
-        middleResultDisplay.textContent = 'Error fetching rates';
+        console.error('Error fetching weather:', error);
+        pagedisplay.textContent = 'Error fetching weather';
     }
 
 }  
@@ -49,6 +32,9 @@ async function getweather () {
 getweather();  
 
 */
+
+const formBox = document.querySelector('#searchBox')
+const cityInform = document.querySelector('#cityInput');  // have to be separate to get value .value 
 
 
 
@@ -66,7 +52,8 @@ getweather();
     { date: '2026-06-12', day: 'Friday', weather: 'rainfall', status: 'heavy rain', degrees:'21°C|°F' },
     { date: '2026-06-13', day: 'Saturday', weather: 'sunshine', status: 'sunny', degrees:'30°C|°F' },
     { date: '2026-06-14', day: 'Sunday', weather: 'snow', status: 'snowing', degrees: '-10°C|°F' },
-    { date: '2026-06-15', day: 'Monday', weather: 'wind', status: 'thunder',degrees: '32°C|°F' }
+    { date: '2026-06-15', day: 'Monday', weather: 'wind', status: 'thunder',degrees: '32°C|°F' },
+    { date: '2026-06-16', day: 'Tuesday', weather: 'sunshine', status: 'humid',degrees: '39°C|°F' }
 ] 
 
  const showTodayInfo = document.querySelector('.grid-container'); 
@@ -136,11 +123,13 @@ getweather();
         
         const matchingApiData = apiMap.get(dateString);
         /*
+        console.log(matchingApiData.city)
         console.log(matchingApiData.weather);
         console.log(matchingApiData.status);
         console.log(matchingApiData.degrees);
         console.log(matchingApiData.date);
         console.log(matchingApiData.day)
+        
 
         const latestWeather = matchingApiData.weather
                 
@@ -155,15 +144,17 @@ getweather();
 
         dates.push(matchingApiData);
         console.log(matchingApiData);
+
+                        //console.log(days.push(matchingApiData)); 
         
            //  using this for latest entry only
-         const myyy =  Object.values(fetchedApiData[fetchedApiData.length - 1]);
-       // temperature.textContent = myyy[myyy.length -1];
+         const latestEntry =  Object.values(fetchedApiData[fetchedApiData.length - 1]);
+       // temperature.textContent = latestEntry[latestEntry.length -1];
         
-        let myyy2;
-        status.textContent = myyy[myyy.length -2];
+           
+        status.textContent = latestEntry[latestEntry.length -2];
          
-        timeAndDay.textContent = `Today: ${myyy[0]}`;
+        timeAndDay.textContent = `Today: ${latestEntry[0]}`;
         
 
         }
@@ -202,7 +193,7 @@ getweather();
 
     const latestObj = Object.values(fetchedApiData[fetchedApiData.length - 1]);  // latest object 
          // console.log(Object.values(fetchedApiData));
-          //  para.textContent = myyy[myyy.length-1];
+          //  para.textContent = latestEntry[latestEntry.length-1];
           //  temperature.appendChild(para);
           
     // console.log(para.textContent.includes("°C"));
@@ -258,7 +249,48 @@ temperature.addEventListener("click", () => {
     }
 });
 
-    
 
+let cityName;
+
+    // compare each user input after hitting submit btn
+formBox.addEventListener('submit', () => {
+
+    event.preventDefault(); 
+
+    try { 
+        cityName = `${cityInform.value}`;
+          
+       //check to validate to non-empty input 
+       if(cityName.length === 0 || cityName === null) {
+        console.error('input needs a string');
+        return
+       }
+       const capCity = cityName.charAt(0).toUpperCase() + cityName.slice(1);
+       console.log(`city entered: ${capCity}`);
+         // return (`city entered: ${capCity}`);
+
+    } catch(err) {
+        console.error('something went wrong', err);
+          // return ('something went wrong', err);
+    }
+
+        // clear form to avoid many clicks
+    document.querySelector('#searchBox').reset();
+});
+
+     // fuction to compare string entered with api city 
+function compareStr () {
+    try {
+        
+        if (cityName === "api city data") { 
+            console.log ("apiweather for the city and current date");
+        }
+          console.log ("something not working");
+    
+    } catch(error) {
+        console.error('this is not working');
+    }
+    
+}
 
 
