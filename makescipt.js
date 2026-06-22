@@ -1,19 +1,78 @@
 
+const formBox = document.querySelector('#searchBox');
+const cityInform = document.querySelector('#cityInput');  // have to be separate to get value .value 
 
-/*
-async function getweather () {
+ const temperature = document.querySelector('.temperature');
+
+
+const timeAndDay = document.querySelector('.time_day');
+
+const status = document.querySelector('.status'); 
+
+
+const imgIcon = document.querySelector('.temp_icons');
+
+const para = document.createElement("p");
+para.classList.add("Temppara");
+
+let celcshowing = true; 
+
+let cityTemp; 
+let fahr;
+let addfahr;
+
+
+
+// let cityName;
+// console.log(cityName);
+
+async function getweather (cityName) {
     
     try {
+
+        // const cityEntered = 'get from from';  // pass city entered to api city  
         
-        
-        // const response = await fetch(`https:// weather app`);
+        const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${cityName}?key=RPCGX83PUDPYPBNTKR8AYWS6B`);
                 
         const weatherData = await response.json();
         
         console.log(weatherData);  
 
 
-        // get data for specific city 
+           
+        //get temperature fore the city  ---- put in eventlistener func -- it represents fahrenheit
+         cityTemp = weatherData.currentConditions.temp;
+             // console.log(cityTemp);
+              // console.log(typeof(cityTemp));
+           fahr = "°F";
+            addfahr = cityTemp + fahr;
+          
+          
+        para.textContent = addfahr;
+        temperature.appendChild(para); 
+       
+              
+        const currentDate =  weatherData.days[0].datetime;
+        console.log(currentDate);
+        timeAndDay.textContent = `Today: ${currentDate}`;
+         
+                       
+
+        // get weather status/conditions 
+        const cityWeatherStatus = weatherData.currentConditions.conditions;  
+        console.log(cityWeatherStatus);
+        status.textContent = cityWeatherStatus;
+          
+           // for css background and weather details
+        const weatherIcon = weatherData.currentConditions.icon;
+        console.log(weatherIcon);
+             
+        // i want to get imgIcon.src not text content
+        imgIcon.textContent = weatherIcon;
+
+            // put description in the lower divs 
+        const weatherDesc = weatherData.description;
+        console.log(weatherDesc);
             
         // const allWeather = weatherData.weather; 
         //const keysWeather = Object.keys(allWeather); 
@@ -24,42 +83,88 @@ async function getweather () {
 
     } catch (error) {
         console.error('Error fetching weather:', error);
-        pagedisplay.textContent = 'Error fetching weather';
+                // pagedisplay.textContent = 'Error fetching weather';
     }
 
-}  
+};
 
-getweather();  
+// trigger getweather() after submit city;  
 
-*/
+formBox.addEventListener('submit', (event) => {
+    event.preventDefault();
 
-const formBox = document.querySelector('#searchBox')
-const cityInform = document.querySelector('#cityInput');  // have to be separate to get value .value 
+    const cityName = cityInform.value.trim();
+    if (!cityName) {
+        console.error('input needs a city');
+        return;
+    }
+
+    console.log(`city entered: ${cityName}`);
+   /* getweather(cityName); */
+
+    formBox.reset();
+
+});
+
+
+  // moved outside async so can query any city after another and the celc fuction continue to work.
+
+temperature.addEventListener("click", () => {
+    
+    const celc = "°C";     
+                // console.log(celc);
+            
+        
+    if (!isNaN(cityTemp)) {
+        const converted = celciusFromFahr(cityTemp);
+        const showInpara = `${converted}${celc}` ;
+
+
+            if (celcshowing) {
+                para.textContent = showInpara;
+                    //  console.log(para.textContent);
+                temperature.appendChild(para);
+            } 
+            else {
+                
+                para.textContent = addfahr;
+                    //  console.log(para.textContent);
+                temperature.appendChild(para);
+            }
+            celcshowing = !celcshowing;       
+            
+    }
+        
+        
+});
 
 
 
 
 
+
+            // array of objects as gotten from api
  const fetchedApiData = [
 
-    { date: '2026-06-05', day: 'Friday', weather: 'rainfall', status: 'heavy rain', degrees:'21°C|°F' },
-    { date: '2026-06-06', day: 'Saturday', weather: 'sunshine', status: 'sunny', degrees:'30°C|°F' },
-    { date: '2026-06-07', day: 'Sunday', weather: 'snow', status: 'snowing', degrees: '-10°C|°F' },
-    { date: '2026-06-08', day: 'Monday', weather: 'wind', status: 'thunder',degrees: '0°C|°F' },
-    { date: '2026-06-09', day: 'Tuesday', weather: 'cloudy', status: 'lightning', degrees: '15°C|°F' },
-    { date: '2026-06-10', day: 'Wednesday', weather: 'sushine', status: 'bright', degrees: '24°C|°F' },
-    { date: '2026-06-11', day: 'Thursday', weather: 'sushine', status: 'bright', degrees: '24°C|°F' },
-    { date: '2026-06-12', day: 'Friday', weather: 'rainfall', status: 'heavy rain', degrees:'21°C|°F' },
-    { date: '2026-06-13', day: 'Saturday', weather: 'sunshine', status: 'sunny', degrees:'30°C|°F' },
-    { date: '2026-06-14', day: 'Sunday', weather: 'snow', status: 'snowing', degrees: '-10°C|°F' },
-    { date: '2026-06-15', day: 'Monday', weather: 'wind', status: 'thunder',degrees: '32°C|°F' },
-    { date: '2026-06-16', day: 'Tuesday', weather: 'sunshine', status: 'humid',degrees: '39°C|°F' }
+    
+    
+    { date: '2026-06-22', day: 'Monday', weather: 'wind', status: 'thunder',degrees: '0°C|°F' },
+    { date: '2026-06-23', day: 'Tuesday', weather: 'cloudy', status: 'lightning', degrees: '15°C|°F' },
+    { date: '2026-06-24', day: 'Wednesday', weather: 'sushine', status: 'bright', degrees: '24°C|°F' },
+    { date: '2026-06-25', day: 'Thursday', weather: 'sushine', status: 'bright', degrees: '24°C|°F' },
+    { date: '2026-06-26', day: 'Friday', weather: 'rainfall', status: 'heavy rain', degrees:'21°C|°F' },
+    { date: '2026-06-27', day: 'Saturday', weather: 'sunshine', status: 'sunny', degrees:'30°C|°F' },
+    { date: '2026-06-28', day: 'Sunday', weather: 'snow', status: 'snowing', degrees: '-10°C|°F' },
+    { date: '2026-06-29', day: 'Monday', weather: 'wind', status: 'thunder',degrees: '32°C|°F' },
+    { date: '2026-06-30', day: 'Tuesday', weather: 'sunshine', status: 'humid', city: "Sydney", degrees: '39°C|°F' },
+    { date: '2026-07-01', day: 'Wednesday', weather: 'sunshine', status: 'sunny', city: "Rome", degrees: '28°C|°F' }
+    
 ] 
 
- const showTodayInfo = document.querySelector('.grid-container'); 
- const temperature = document.querySelector('.temperature');
- const status = document.querySelector('.status');
- const timeAndDay = document.querySelector('.time_day');
+ const showTodayInfo = document.querySelector('.gridContainer'); 
+ //const temperature = document.querySelector('.temperature');
+ //const status = document.querySelector('.status');
+ //const timeAndDay = document.querySelector('.time_day');
  const celcfahToggle = document.querySelector('.celfahdisplay');
 
 
@@ -70,6 +175,8 @@ const cityInform = document.querySelector('#cityInput');  // have to be separate
                 //console.log(`here is apiepepepeep : ${apiMap}`);
         const dates = [];
         const days = [];
+        const cities = [];
+        
             // let matchingApiData; 
 
 
@@ -80,10 +187,10 @@ const cityInform = document.querySelector('#cityInput');  // have to be separate
 
             const current_date = new Date();
 
-            const yesterdaysDate = new Date(current_date);
-            yesterdaysDate.setDate(current_date.getDate() - 1);
+            const tmrwDate = new Date(current_date);
+            tmrwDate.setDate(current_date.getDate() + 1);
             
-            current_date.setDate(current_date.getDate() - i);
+            current_date.setDate(current_date.getDate() + i);
                // console.log('dateCheckhere: ', current_date);
 
                 
@@ -91,37 +198,36 @@ const cityInform = document.querySelector('#cityInput');  // have to be separate
             const dateString = current_date.toISOString().split('T')[0];
                 // console.log(`dateStringHere: ${dateString}`);
             
-            const yesterdaysDateString = yesterdaysDate.toISOString().split('T')[0];
-                // console.log(`yesterdaysDateStringHere: ${yesterdaysDateString}`);
+            const tmrwDateString = tmrwDate.toISOString().split('T')[0];
+                // console.log(`tmrwDateStringHere: ${tmrwDateString}`);
             
             const dayName = current_date.toLocaleDateString('en-US', { weekday: 'long' });
                 // console.log(`dayNameHere: ${dayName}`);
 
-            function nameTodayAndYesterday() {
+            function todayAndTmrw() {
 
                 if (dateString === new Date().toISOString().split('T')[0]) {
                     // using dayName === ; gives same Today like Monday this week and Monday last week
                     console.log("Today");
                     return "Today";
                 }
-                else if (dateString === yesterdaysDateString) {
-                    console.log("Yesterday");
-                    return "Yesterday";
+                else if (dateString === tmrwDateString) {
+                    console.log("Tomorrow");
+                    return "Tomorrow";
                 }
                 
-              
-
 
              console.log(dayName);   
                 return dayName;
 
             };
                 
-            nameTodayAndYesterday();
+            todayAndTmrw();
 
          
         
         const matchingApiData = apiMap.get(dateString);
+        
         /*
         console.log(matchingApiData.city)
         console.log(matchingApiData.weather);
@@ -141,27 +247,43 @@ const cityInform = document.querySelector('#cityInput');  // have to be separate
         console.log(`latestWeather: ${latestWeather}, previousWeather: ${previousWeather} (from ${previousDateString})`);
         */
         
-
+           // push each date into dates array which is the return date
         dates.push(matchingApiData);
+
+        // each datestring information
         console.log(matchingApiData);
 
-                        //console.log(days.push(matchingApiData)); 
-        
-           //  using this for latest entry only
-         const latestEntry =  Object.values(fetchedApiData[fetchedApiData.length - 1]);
-       // temperature.textContent = latestEntry[latestEntry.length -1];
+              //console.log(days.push(matchingApiData)); counts number of days
         
            
-        status.textContent = latestEntry[latestEntry.length -2];
+          // get city/location key from api and push their values(weather data) into array -- undefrined if no city key
+            // same for weather, status
+              /*
+                const intoArray = matchingApiData.city;
+                cities.push(intoArray);
+                console.log(cities);
+              */
+        
+           //  using this for latest entry only
+         //const latestEntry =  Object.values(fetchedApiData[fetchedApiData.length - 1]);
+           // console.log(latestEntry);
+        
+           // 1st entry
+        const latestEntry =  Object.values(fetchedApiData[0]);
+            
+           //get position of status --- @ pos -3
+        // status.textContent = latestEntry[latestEntry.length -3];
          
-        timeAndDay.textContent = `Today: ${latestEntry[0]}`;
+           // get position of today's date from object --- @ position 0
+       // timeAndDay.textContent = `Today: ${latestEntry[0]}`;
+
+           // use same to get position of today's weather
         
 
         }
 
              //console.log(dates);
         return dates;
-
 
 
  }
@@ -174,35 +296,37 @@ const cityInform = document.querySelector('#cityInput');  // have to be separate
         /* (number)  -> number
            celciusFromFahr (32) returns 0 celc  ; celciusFromFah (212) returns 100 celc
 
-           change formula if celcius to Fahr (fahrenheit - 32) * (5/9);
+           change formula if celcius to Fahr (fahrenheit * 9/5) + 32;    
        */
-    const answer = (fahrenheit * 9/5) + 32;         
+    const answer = (fahrenheit - 32) * (5/9);      
       //console.log(answer);
     return answer;
 
  }
- console.log(celciusFromFahr(32));
- console.log(celciusFromFahr(20));
+ console.log(celciusFromFahr(32));   // 0 celcius
+ console.log(celciusFromFahr(68));   // 20 celcius
 
 
 
+/*
+const para = document.createElement("p");
+para.classList.add("Temppara");
+*/
 
-    const para = document.createElement("p");
-    para.classList.add("Temppara");
+//const latestObj = Object.values(fetchedApiData[fetchedApiData.length - 1]);  // latest object 
+  /*
+const latestObj = Object.values(fetchedApiData[0]);
+        // console.log(Object.values(fetchedApiData));
+        //  para.textContent = latestEntry[latestEntry.length-1];
+        //  temperature.appendChild(para);
+        
+        // console.log(para.textContent.includes("°C"));
+    const degreesStr = latestObj[latestObj.length - 1]; // e.g. '24°C|°F'
+        //console.log(degreesStr);
+    para.textContent = degreesStr;      // intialized
+    temperature.appendChild(para);
 
-
-    const latestObj = Object.values(fetchedApiData[fetchedApiData.length - 1]);  // latest object 
-         // console.log(Object.values(fetchedApiData));
-          //  para.textContent = latestEntry[latestEntry.length-1];
-          //  temperature.appendChild(para);
-          
-    // console.log(para.textContent.includes("°C"));
-      const degreesStr = latestObj[latestObj.length - 1]; // e.g. '24°C|°F'
-         //console.log(degreesStr);
-      para.textContent = degreesStr;      // intialized
-      temperature.appendChild(para);
-
-      let celcshowing = true;      // first in celcius from api, initialize 
+  //  let celcshowing = true;      // first in celcius from api, initialize 
 
 
 
@@ -211,15 +335,16 @@ temperature.addEventListener("click", () => {
   //  if (degreesStr.includes("°C")) {    // includes is redundant as it is the °C|°F string itself.
     if (degreesStr) {
     
+        console.log(degreesStr);
         //get and store degreeStr from index 0 to but not including °C
         const idxCtoend = degreesStr.indexOf('°C');   // index number 
-        console.log(idxCtoend);
+           console.log(idxCtoend);
 
         const storeStr = degreesStr.slice(0, idxCtoend).trim();    // get only number part
-        console.log (storeStr);
+          console.log (storeStr);
 
-        const strToend = degreesStr.slice(-2,).trim();     // use only °F
-        console.log(strToend);
+        const celc = degreesStr.slice(idxCtoend, -3).trim();     // get only °C part
+           console.log(celc);
         
         // turn storeStr into number 
         const numSide = parseFloat(storeStr);
@@ -229,7 +354,7 @@ temperature.addEventListener("click", () => {
         // when click c or f change display using celciusFromFar 
          if (!isNaN(numSide)) {
             const converted = celciusFromFahr(numSide);
-            const showInpara = `${converted}${strToend}` ;
+            const showInpara = `${converted}${celc}` ;
 
 
                 if (celcshowing) {
@@ -247,9 +372,9 @@ temperature.addEventListener("click", () => {
     }
        
     }
-});
+}); */
 
-
+   /*
 let cityName;
 
     // compare each user input after hitting submit btn
@@ -277,6 +402,8 @@ formBox.addEventListener('submit', () => {
         // clear form to avoid many clicks
     document.querySelector('#searchBox').reset();
 });
+
+*/
 
      // fuction to compare string entered with api city 
 function compareStr () {
