@@ -1,6 +1,9 @@
 
 const formBox = document.querySelector('#searchBox');
 const cityInform = document.querySelector('#cityInput');  // have to be separate to get value .value 
+const btnPress = document.querySelector('.pressBtn');
+const downgridDisplay = document.querySelector('.downGrid'); // trigger only after api is gotten.
+const loadingMessage = document.querySelector('#loadingMessage');
 
  const temperature = document.querySelector('.temperature');
 
@@ -10,7 +13,9 @@ const timeAndDay = document.querySelector('.time_day');
 const status = document.querySelector('.status'); 
 
 
-const imgIcon = document.querySelector('.temp_icons');
+const iconName = document.querySelector('.temp_icons');
+const imgSource = document.querySelector('#showIcon');
+
 
 const para = document.createElement("p");
 para.classList.add("Temppara");
@@ -20,6 +25,9 @@ let celcshowing = true;
 let cityTemp; 
 let fahr;
 let addfahr;
+let eachDaystemperature;
+let eachDayStatus;
+
 
 
 
@@ -29,6 +37,15 @@ let addfahr;
 async function getweather (cityName) {
     
     try {
+
+        loadingMessage.textContent = 'loading...';
+        loadingMessage.style.display = 'block';
+        
+        // Clear previous data
+        temperature.textContent = '';
+        timeAndDay.textContent = '';
+        status.textContent = '';
+        imgSource.src = '';
 
         // const cityEntered = 'get from from';  // pass city entered to api city  
         
@@ -41,23 +58,21 @@ async function getweather (cityName) {
 
            
         //get temperature fore the city  ---- put in eventlistener func -- it represents fahrenheit
-         cityTemp = weatherData.currentConditions.temp;
+        cityTemp = weatherData.currentConditions.temp;
              // console.log(cityTemp);
               // console.log(typeof(cityTemp));
-           fahr = "°F";
-            addfahr = cityTemp + fahr;
-          
-          
+        fahr = "°F";
+        addfahr = cityTemp + fahr;
+           
         para.textContent = addfahr;
         temperature.appendChild(para); 
        
-              
+          // date from api     
         const currentDate =  weatherData.days[0].datetime;
         console.log(currentDate);
         timeAndDay.textContent = `Today: ${currentDate}`;
-         
-                       
-
+                    
+ 
         // get weather status/conditions 
         const cityWeatherStatus = weatherData.currentConditions.conditions;  
         console.log(cityWeatherStatus);
@@ -67,22 +82,103 @@ async function getweather (cityName) {
         const weatherIcon = weatherData.currentConditions.icon;
         console.log(weatherIcon);
              
-        // i want to get imgIcon.src not text content
-        imgIcon.textContent = weatherIcon;
+        // i want to get iconName.src not text content
+        iconName.textContent = weatherIcon;
+
+        const iconPngUrl = `https://raw.githubusercontent.com/visualcrossing/WeatherIcons/main/PNG/2nd%20Set%20-%20Color/${weatherIcon}.png`;
+        imgSource.src = iconPngUrl;
 
             // put description in the lower divs 
         const weatherDesc = weatherData.description;
         console.log(weatherDesc);
             
-        // const allWeather = weatherData.weather; 
-        //const keysWeather = Object.keys(allWeather); 
-        //const weatherValue = Object.values(allWeather); 
-        // console.log(allweather.city);
-                
+        
 
+
+        // show weather for the next seven days in the lower div  
+        
+           const sevenDaysafterToday =  weatherData.days;
+           console.log(sevenDaysafterToday);
+           const shortit = sevenDaysafterToday.slice(1, 8);
+
+           eachDaystemperature = [];
+           eachDayStatus = [];
+           const areaColumns = document.querySelectorAll('.areaColumn');
+
+           // Clear all previous rows
+           areaColumns.forEach((col) => {
+               const rows = col.querySelectorAll('.areaRow');
+               rows.forEach((row) => {
+                   row.textContent = '';
+                   row.onclick = null;
+               });
+           });
+
+           // Extract, log and write weather data for each day into the corresponding column rows
+           shortit.forEach((day, index) => {
+
+               const dayTimeAndDay = day.datetime;
+               const dayStatus = day.conditions;
+               const dayWeatherIcon = day.icon;
+               const dayWeatherDesc = day.description;
+               const dayTemperature = day.temp;
+               eachDaystemperature[index] = dayTemperature;
+               eachDayStatus[index] = dayStatus;
+
+               if (index === 0) {
+                   console.log('Tomorrow:');
+               } else {
+                   console.log(`Day ${index + 1}:`);
+               }
+               console.log('timeAndDay:', dayTimeAndDay);
+               console.log('status:', dayStatus);
+               console.log('weatherIcon:', dayWeatherIcon);
+               console.log('weatherDesc:', dayWeatherDesc);
+               console.log(dayTemperature);
+               console.log('---');
+
+               const col = areaColumns[index];
+               if (!col) return;
+
+               const rows = col.querySelectorAll('.areaRow');
+               if (rows.length < 4) return;
+
+               // row 1: label (tomorrow for first day)
+               if (index === 0) {
+                   rows[0].textContent = `Tomorrow: ${dayTimeAndDay}`;
+               } else {
+                   rows[0].textContent = dayTimeAndDay;
+               }
+               // row 2: status and temperature
+               rows[1].textContent = `${dayStatus} ${dayTemperature}${fahr}`;
+               rows[1].dataset.celsius = 'false';
+               rows[1].onclick = () => {
+                   toggleEachDayTemperature(rows[1], dayTemperature, dayStatus);
+               };
+               // row 3: weather icon
+               rows[2].textContent = '';
+               const dayIconPngUrl = `https://raw.githubusercontent.com/visualcrossing/WeatherIcons/main/PNG/2nd%20Set%20-%20Color/${dayWeatherIcon}.png`;
+               const dayImg = document.createElement('img');
+               dayImg.src = dayIconPngUrl;
+               dayImg.alt = dayWeatherIcon;
+               dayImg.style.width = '50px';
+               dayImg.style.height = '50px';
+               rows[2].appendChild(dayImg);
+               // row 4: description
+               rows[3].textContent = dayWeatherDesc;
+           });
+            
+        loadingMessage.textContent = 'complete';
+        setTimeout(() => {
+            loadingMessage.style.display = 'none';
+        }, 2000);
 
     } catch (error) {
         console.error('Error fetching weather:', error);
+        loadingMessage.textContent = 'Error loading weather';
+        setTimeout(() => {
+            loadingMessage.style.display = 'none';
+        }, 2000);
                 // pagedisplay.textContent = 'Error fetching weather';
     }
 
@@ -100,43 +196,50 @@ formBox.addEventListener('submit', (event) => {
     }
 
     console.log(`city entered: ${cityName}`);
-   /* getweather(cityName); */
+    getweather(cityName); 
 
     formBox.reset();
 
 });
 
+// Button to toggle 7-day forecast display -- moved out of getweather() to prevent events stacking 
+btnPress.addEventListener('click', () => {
+    if (downgridDisplay.style.display === "none") {
+        downgridDisplay.style.display = "grid";
+    } else {
+        downgridDisplay.style.display = "none";
+    }
+});
 
   // moved outside async so can query any city after another and the celc fuction continue to work.
 
 temperature.addEventListener("click", () => {
-    
-    const celc = "°C";     
-                // console.log(celc);
-            
-        
+    const celc = "°C";
     if (!isNaN(cityTemp)) {
         const converted = celciusFromFahr(cityTemp);
-        const showInpara = `${converted}${celc}` ;
+        const showInpara = `${converted}${celc}`;
 
-
-            if (celcshowing) {
-                para.textContent = showInpara;
-                    //  console.log(para.textContent);
-                temperature.appendChild(para);
-            } 
-            else {
-                
-                para.textContent = addfahr;
-                    //  console.log(para.textContent);
-                temperature.appendChild(para);
-            }
-            celcshowing = !celcshowing;       
-            
+        if (celcshowing) {
+            para.textContent = showInpara;
+        } else {
+            para.textContent = addfahr;
+        }
+        temperature.appendChild(para);
+        celcshowing = !celcshowing;
     }
-        
-        
 });
+
+function toggleEachDayTemperature(row, tempValue, statusText) {
+    let isCelsius = row.dataset.celsius === 'true';
+    if (isCelsius) {
+        row.textContent = `${statusText} ${tempValue}${fahr}`;
+        row.dataset.celsius = 'false';
+    } else {
+        row.textContent = `${statusText} ${celciusFromFahr(tempValue)}°C`;
+        row.dataset.celsius = 'true';
+    }
+    
+}
 
 
 
@@ -147,21 +250,24 @@ temperature.addEventListener("click", () => {
  const fetchedApiData = [
 
     
-    
-    { date: '2026-06-22', day: 'Monday', weather: 'wind', status: 'thunder',degrees: '0°C|°F' },
-    { date: '2026-06-23', day: 'Tuesday', weather: 'cloudy', status: 'lightning', degrees: '15°C|°F' },
-    { date: '2026-06-24', day: 'Wednesday', weather: 'sushine', status: 'bright', degrees: '24°C|°F' },
-    { date: '2026-06-25', day: 'Thursday', weather: 'sushine', status: 'bright', degrees: '24°C|°F' },
     { date: '2026-06-26', day: 'Friday', weather: 'rainfall', status: 'heavy rain', degrees:'21°C|°F' },
     { date: '2026-06-27', day: 'Saturday', weather: 'sunshine', status: 'sunny', degrees:'30°C|°F' },
     { date: '2026-06-28', day: 'Sunday', weather: 'snow', status: 'snowing', degrees: '-10°C|°F' },
     { date: '2026-06-29', day: 'Monday', weather: 'wind', status: 'thunder',degrees: '32°C|°F' },
     { date: '2026-06-30', day: 'Tuesday', weather: 'sunshine', status: 'humid', city: "Sydney", degrees: '39°C|°F' },
-    { date: '2026-07-01', day: 'Wednesday', weather: 'sunshine', status: 'sunny', city: "Rome", degrees: '28°C|°F' }
+    { date: '2026-07-01', day: 'Wednesday', weather: 'sunshine', status: 'sunny', city: "Rome", degrees: '28°C|°F' },
+    { date: '2026-07-02', day: 'Thursday', weather: 'wind', status: 'thunder',degrees: '0°C|°F' },
+    { date: '2026-07-03', day: 'Friday', weather: 'rainfall', status: 'heavy rain', degrees:'21°C|°F' },
+    { date: '2026-07-04', day: 'Saturday', weather: 'sunshine', status: 'sunny', degrees:'30°C|°F' },
+    { date: '2026-07-05', day: 'Sunday', weather: 'snow', status: 'snowing', degrees: '-10°C|°F' },
+    { date: '2026-07-06', day: 'Monday', weather: 'wind', status: 'thunder',degrees: '32°C|°F' },
+    { date: '2026-07-07', day: 'Tuesday', weather: 'sunshine', status: 'humid', city: "Sydney", degrees: '39°C|°F' },
+    { date: '2026-07-08', day: 'Wednesday', weather: 'sunshine', status: 'sunny', city: "Rome", degrees: '28°C|°F' },
+    { date: '2026-07-09', day: 'Thursday', weather: 'wind', status: 'thunder',degrees: '0°C|°F' }
     
 ] 
 
- const showTodayInfo = document.querySelector('.gridContainer'); 
+ const showTodayInfo = document.querySelector('.gridTop'); 
  //const temperature = document.querySelector('.temperature');
  //const status = document.querySelector('.status');
  //const timeAndDay = document.querySelector('.time_day');
