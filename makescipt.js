@@ -1,9 +1,12 @@
 
 const formBox = document.querySelector('#searchBox');
 const cityInform = document.querySelector('#cityInput');  // have to be separate to get value .value 
+const currentDisplay = document.querySelector('.todaysweather h3');
+const nameDisplay = document.querySelector('.todaysweather p');
 const btnPress = document.querySelector('.pressBtn');
 const downgridDisplay = document.querySelector('.downGrid'); // trigger only after api is gotten.
 const loadingMessage = document.querySelector('#loadingMessage');
+const topGrid = document.querySelector('.gridTop');
 
  const temperature = document.querySelector('.temperature');
 
@@ -27,7 +30,10 @@ let fahr;
 let addfahr;
 let eachDaystemperature;
 let eachDayStatus;
+let sevenDayDataAvailable = false;
 
+btnPress.style.display = 'none';  // show only after api is gotten; 
+topGrid.style.display = 'none';  // show only after api is gotten;
 
 
 
@@ -46,6 +52,7 @@ async function getweather (cityName) {
         timeAndDay.textContent = '';
         status.textContent = '';
         imgSource.src = '';
+        sevenDayDataAvailable = false;
 
         // const cityEntered = 'get from from';  // pass city entered to api city  
         
@@ -71,8 +78,11 @@ async function getweather (cityName) {
         const currentDate =  weatherData.days[0].datetime;
         console.log(currentDate);
         timeAndDay.textContent = `Today: ${currentDate}`;
-                    
- 
+        
+        
+        currentDisplay.textContent = "Today's Weather";
+        nameDisplay.textContent = cityName.charAt(0).toUpperCase() + cityName.slice(1); 
+
         // get weather status/conditions 
         const cityWeatherStatus = weatherData.currentConditions.conditions;  
         console.log(cityWeatherStatus);
@@ -87,12 +97,15 @@ async function getweather (cityName) {
 
         const iconPngUrl = `https://raw.githubusercontent.com/visualcrossing/WeatherIcons/main/PNG/2nd%20Set%20-%20Color/${weatherIcon}.png`;
         imgSource.src = iconPngUrl;
+        imgSource.alt = "weather detail";
+             //topGrid.style.background = `url(${iconPngUrl}) no-repeat center center`;
+        
 
             // put description in the lower divs 
         const weatherDesc = weatherData.description;
         console.log(weatherDesc);
             
-        
+        topGrid.style.display = 'grid';  // show only after api is gotten;
 
 
         // show weather for the next seven days in the lower div  
@@ -167,6 +180,9 @@ async function getweather (cityName) {
                // row 4: description
                rows[3].textContent = dayWeatherDesc;
            });
+           
+           sevenDayDataAvailable = true;
+           btnPress.style.display = 'block';
             
         loadingMessage.textContent = 'complete';
         setTimeout(() => {
@@ -202,13 +218,27 @@ formBox.addEventListener('submit', (event) => {
 
 });
 
+
+
+
 // Button to toggle 7-day forecast display -- moved out of getweather() to prevent events stacking 
 btnPress.addEventListener('click', () => {
-    if (downgridDisplay.style.display === "none") {
-        downgridDisplay.style.display = "grid";
-    } else {
-        downgridDisplay.style.display = "none";
+    if (!sevenDayDataAvailable) {
+        return;
     }
+    //console.log(sevenDayDataAvailable);
+    //console.log(!sevenDayDataAvailable);
+   // btnPress.style.display = 'block';  // show button only after api is gotten;
+   else {
+ 
+        if (downgridDisplay.style.display === "none") {
+            downgridDisplay.style.display = "grid";
+        } else {
+            downgridDisplay.style.display = "none";
+        } 
+    }
+    
+    
 });
 
   // moved outside async so can query any city after another and the celc fuction continue to work.
@@ -217,7 +247,7 @@ temperature.addEventListener("click", () => {
     const celc = "°C";
     if (!isNaN(cityTemp)) {
         const converted = celciusFromFahr(cityTemp);
-        const showInpara = `${converted}${celc}`;
+        const showInpara = `${converted.toFixed(2)}${celc}`;
 
         if (celcshowing) {
             para.textContent = showInpara;
@@ -235,7 +265,8 @@ function toggleEachDayTemperature(row, tempValue, statusText) {
         row.textContent = `${statusText} ${tempValue}${fahr}`;
         row.dataset.celsius = 'false';
     } else {
-        row.textContent = `${statusText} ${celciusFromFahr(tempValue)}°C`;
+              // add toFixed here too
+        row.textContent = `${statusText} ${celciusFromFahr(tempValue).toFixed(2)}°C`;
         row.dataset.celsius = 'true';
     }
     

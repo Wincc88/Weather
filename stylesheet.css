@@ -8,6 +8,45 @@
     
 }
 
+.header, #searchBox {
+    text-align: center;
+    margin-top: 10px;
+    color: rebeccapurple;
+}
+
+.inputareaAndsubmitBtn {
+    position: relative;
+    display: inline-block;
+    width: 260px;
+    margin: 10px auto 0;
+}
+
+input {
+    height: 36px;
+    width: 100%;
+    border: 1px solid rebeccapurple;
+    border-radius: 8px;
+    padding: 5px 90px 5px 10px;
+}
+
+.inputareaAndsubmitBtn > button {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 34px;
+    min-width: 70px;
+    color: white;
+    border: 1px solid rgb(51, 153, 83);
+    border-radius: 5px;
+    cursor: pointer;
+    background: rebeccapurple;
+}
+
+#cname {
+  text-align: center;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -18,17 +57,25 @@
 }
 
 .gridTop {
-    display: grid;
+    /* display: grid; */
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto 1fr;
     grid-template-areas: 
       "a a"
       "l r";
-    border: 1px solid black;
+      /* border: 1px solid black;  */
     margin-top: 10px;
     padding: 10px;
     gap: 10px;
+    background: linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);
+    animation: AnimationName 10s ease infinite;   /* infinte can be removed to be back at its original state */
 }
+
+@keyframes AnimationName {
+  from {background: linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);}
+  to {background: linear-gradient(90deg, #fbff00c7, #09d3ee1b, #d9ff0065);}
+}
+
 
 .todaysweather  {
   grid-area: a;
@@ -39,6 +86,11 @@
 .todaysweather > h3 {
   text-align: center;
   margin: 0;
+}
+
+.pafterh3 {
+  font-size: 30px;
+  margin-top: 10px;
 }
 
 .leftGrid {
@@ -57,15 +109,16 @@
 }
 
 .temperature, .temp_icons {
-  border: 1px solid green;
+ /* border: 1px solid green; */
   width: fit-content;   
   /* background-color: yellow; */
 }
 
 #showIcon {
-  width: 60px;
+  border: none;
+ /* width: 60px;
   height: 70px;
- /* background-color: aqua;
+  background-color: aqua;
  border: 1px solid yellow; */
 }
 
@@ -80,8 +133,10 @@
 
 
 .pressBtn {
-  border: 1px solid greenyellow;
+  border: 1px solid linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);
   border-radius: 20px;
+  color: rebeccapurple;
+  font-weight: bold;
   margin-top: 10px;
   margin-bottom: 5px;
   padding: 10px;
@@ -90,6 +145,7 @@
   justify-self: center;
   align-self: center;
   cursor: pointer;
+  background: linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);
   
 }
 
@@ -99,9 +155,18 @@
     grid-template-columns: repeat(7, 1fr);
     grid-template-areas: "area0 area1 area2 area3 area4 area5 area6 area7";
     gap: 10px;
-    border: 2px solid pink;
+    border: 2px solid linear-gradient(90deg, #9d836f2a, #7239551b, #24a3c634);;
+    border-radius: 10px;
     padding: 10px;
+    background: linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);
+    animation: DownAnimationName 15s ease infinite;   /* infinte can be removed to be back at its original state */
 }
+
+@keyframes DownAnimationName {
+  from {background: linear-gradient(90deg, #ff6a0010, #ee097853, #00c8ff7b);}
+  to {background: linear-gradient(90deg, #fbff002b, #dbee093d, #d9ff00d8);}
+}
+
 
 .areaColumn {
     display: grid;
@@ -138,13 +203,3 @@
 
 
 
-#searchBox {
-  margin-top: 10px;
-  height: 30px;
-  width: fit-content;
-  border: 1px solid red;
-}
-
-#cname {
-  text-align: center;
-}
