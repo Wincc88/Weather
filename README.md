@@ -4,6 +4,6 @@ Object key/values is taken
 It reveals the current weather information based on country and city chosen
 
 ##
-Form is used to get user's inputed country and city
+Form is used to get user's inputed valid city
 
 ### 
