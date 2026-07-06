@@ -8,17 +8,27 @@
     
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px; 
+   /* border: 1px solid rebeccapurple; 
+    width: fit-content; */
+  padding: 20px;
+    
+}
+
 .header, #searchBox {
-    text-align: center;
-    margin-top: 10px;
-    color: rebeccapurple;
+  text-align: center;
+  margin-top: 10px;
+  color: rebeccapurple;
 }
 
 .inputareaAndsubmitBtn {
-    position: relative;
-    display: inline-block;
-    width: 260px;
-    margin: 10px auto 0;
+  position: relative;
+  display: inline-block;
+  width: 260px;
+  margin: 10px auto 0;
 }
 
 input {
@@ -30,45 +40,37 @@ input {
 }
 
 .inputareaAndsubmitBtn > button {
-    position: absolute;
-    right: 2px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 34px;
-    min-width: 70px;
-    color: white;
-    border: 1px solid rgb(51, 153, 83);
-    border-radius: 5px;
-    cursor: pointer;
-    background: rebeccapurple;
+  position: absolute;
+  right: 0px;  
+  top: 50%;
+  transform: translateY(-50%);
+  height: 34px;
+  min-width: 70px;
+  color: white;
+  border: 1px solid rgb(51, 153, 83);
+  border-radius: 5px;
+  cursor: pointer;
+  background: rebeccapurple;
 }
 
 #cname {
   text-align: center;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  margin-top: 10px; 
-   /* border: 1px solid rebeccapurple; 
-    width: fit-content; */
-    
-}
 
 .gridTop {
-    /* display: grid; */
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
-    grid-template-areas: 
-      "a a"
-      "l r";
-      /* border: 1px solid black;  */
-    margin-top: 10px;
-    padding: 10px;
-    gap: 10px;
-    background: linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);
-    animation: AnimationName 10s ease infinite;   /* infinte can be removed to be back at its original state */
+  /* display: grid; */
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: 
+    "a a"
+    "l r";
+    /* border: 1px solid black;  */
+  margin-top: 10px;
+  padding: 10px;
+  gap: 10px;
+  background: linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);
+  animation: AnimationName 10s ease infinite;   /* infinte can be removed to be back at its original state */
 }
 
 @keyframes AnimationName {
@@ -109,8 +111,8 @@ input {
 }
 
 .temperature, .temp_icons {
- /* border: 1px solid green; */
-  width: fit-content;   
+  width: fit-content; 
+  /* border: 1px solid green; */  
   /* background-color: yellow; */
 }
 
@@ -125,12 +127,14 @@ input {
 .time_day, .status {
   flex-direction: column;
  /* text-align: right; */
-  border: 1px solid yellow;
+ /* border: 1px solid yellow; */
   width: fit-content;     /* text-align only moves to right when width !== fit-content */
   justify-self: end;      /* justify-self instead */
 } 
 
-
+.pressAnddowngridDiv {
+  background: linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);
+}
 
 .pressBtn {
   border: 1px solid linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);
@@ -150,16 +154,15 @@ input {
 }
 
 .downGrid {
-    display: none;    /* display only when weeks weather is pressed */
-       
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-areas: "area0 area1 area2 area3 area4 area5 area6 area7";
-    gap: 10px;
-    border: 2px solid linear-gradient(90deg, #9d836f2a, #7239551b, #24a3c634);;
-    border-radius: 10px;
-    padding: 10px;
-    background: linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);
-    animation: DownAnimationName 15s ease infinite;   /* infinte can be removed to be back at its original state */
+  display: none;    /* display only when weeks weather is pressed */
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-areas: "area0 area1 area2 area3 area4 area5 area6 area7";
+  gap: 10px;
+  border: 2px solid linear-gradient(90deg, #9d836f2a, #7239551b, #24a3c634);;
+  border-radius: 10px;
+  padding: 10px;
+  background: linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);
+  animation: DownAnimationName 15s ease infinite;   /* infinte can be removed to be back at its original state */
 }
 
 @keyframes DownAnimationName {
@@ -172,12 +175,12 @@ input {
     display: grid;
     grid-template-rows: repeat(4, 1fr);  /* min-content makes it fit, 1 fr makes it bigger */
     gap: 5px;
-    border: 1px solid black;
+    border: 1px solid linear-gradient(90deg, #ff6a002a, #ee09781b, #00c8ff34);
     padding: 0;
 }
 
 .areaRow {
-    border: 1px solid yellow;
+    border: 1px solid linear-gradient(90deg, #ff6a0010, #ee097853, #00c8ff7b);
     padding: 0 4px;
     display: flex;
     align-items: center;
@@ -201,5 +204,29 @@ input {
 
 
 
+
+@media screen and (max-width: 950px) {
+  .downGrid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-areas: "area0 area1 area2 area3"
+                          "area4 area5 area6 area7";
+
+  }
+  
+}
+
+
+@media screen and (max-width: 600px) {
+    .downGrid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: "area0 area1 area2"
+                          "area3 area4 area5"
+                          ". area6 .";
+
+    
+    /* overflow-x: scroll; */
+  }
+  
+}
 
 
