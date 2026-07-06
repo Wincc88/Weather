@@ -219,10 +219,21 @@ input {
 @media screen and (max-width: 600px) {
   .downGrid {
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: auto;
-    grid-template-areas: none;
-    gap: 10px;
+    grid-template-areas: "area0 area1"
+                          "area2 area3"
+                          "area4 area5"
+                          "area6 .";
+  }
+
+  .areaRow {
+    text-align: center;
+  }
+
+  .areaColumn .areaRow:first-child {
+    font-weight: bold;
+    color: rebeccapurple;
   }
 }
+
 
 
