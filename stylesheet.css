@@ -217,11 +217,12 @@ input {
 
 
 @media screen and (max-width: 600px) {
-    .downGrid {
+  .downGrid {
     grid-template-columns: repeat(2, 1fr);
-    /* overflow-x: scroll; */
+    grid-auto-rows: auto;
+    grid-template-areas: none;
+    gap: 10px;
   }
-  
 }
 
 
