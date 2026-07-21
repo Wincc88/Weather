@@ -113,8 +113,9 @@ input {
 .temperature, .temp_icons {
   width: fit-content; 
   /* border: 1px solid green; */  
-  /* background-color: yellow; */
+  /* background-color: blue; */
 }
+
 
 #showIcon {
   border: none;
@@ -187,6 +188,10 @@ input {
     justify-content: center;
     width: 100%;
     justify-self: center;
+}
+
+.temperature, .areaRow[data-celsius] {
+    cursor: pointer;
 }
 
 .area0 .areaRow:first-child {

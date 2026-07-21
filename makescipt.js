@@ -31,8 +31,10 @@ let addfahr;
 let eachDaystemperature;
 let eachDayStatus;
 let sevenDayDataAvailable = false;
+let isDowngridVisible = false;
 
 btnPress.style.display = 'none';  // show only after api is gotten; 
+downgridDisplay.style.display = 'none';
 topGrid.style.display = 'none';  // show only after api is gotten;
 
 
@@ -60,7 +62,7 @@ async function getweather (cityName) {
                 
         const weatherData = await response.json();
         
-        console.log(weatherData);  
+        //console.log(weatherData);  
 
 
            
@@ -231,19 +233,21 @@ btnPress.addEventListener('click', () => {
     if (!sevenDayDataAvailable) {
         return;
     }
+
+    
     //console.log(sevenDayDataAvailable);
     //console.log(!sevenDayDataAvailable);
    // btnPress.style.display = 'block';  // show button only after api is gotten;
-   else {
- 
-        if (downgridDisplay.style.display === "none") {
-            downgridDisplay.style.display = "grid";
-        } else {
-            downgridDisplay.style.display = "none";
-        } 
+   // isDowngridVisible helps avoid redundancy in clicking twice
+   
+
+    if (!isDowngridVisible) {
+        downgridDisplay.style.display = 'grid';
+        isDowngridVisible = true;
+    } else {
+        downgridDisplay.style.display = 'none';
+        isDowngridVisible = false;
     }
-    
-    
 });
 
 
@@ -292,8 +296,8 @@ function celciusFromFahr (fahrenheit) {
     return answer;
 
 }
- console.log(celciusFromFahr(32));   // 0 celcius
- console.log(celciusFromFahr(68));   // 20 celcius
+ // console.log(celciusFromFahr(32));   // 0 celcius
+ // console.log(celciusFromFahr(68));   // 20 celcius
 
 
 
