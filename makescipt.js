@@ -13,7 +13,7 @@ const topGrid = document.querySelector('.gridTop');
 
 const timeAndDay = document.querySelector('.time_day');
 
-const status = document.querySelector('.status'); 
+const changedStatus = document.querySelector('.status'); 
 
 
 const iconName = document.querySelector('.temp_icons');
@@ -52,7 +52,7 @@ async function getweather (cityName) {
         // Clear previous data
         temperature.textContent = '';
         timeAndDay.textContent = '';
-        status.textContent = '';
+        changedStatus.textContent = '';
         imgSource.src = '';
         sevenDayDataAvailable = false;
 
@@ -88,7 +88,7 @@ async function getweather (cityName) {
         // get weather status/conditions 
         const cityWeatherStatus = weatherData.currentConditions.conditions;  
         // console.log(cityWeatherStatus);
-        status.textContent = cityWeatherStatus;
+        changedStatus.textContent = cityWeatherStatus;
           
            // for css background and weather details
         const weatherIcon = weatherData.currentConditions.icon;
